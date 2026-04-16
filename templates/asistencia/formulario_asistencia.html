@@ -4,13 +4,251 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Asistencia</title>
+    <style>
+        :root {
+            --bg: #f3f5f7;
+            --card: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --primary: #0f766e;
+            --primary-hover: #115e59;
+            --border: #d1d5db;
+            --danger: #b91c1c;
+            --danger-bg: #fef2f2;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ecfeff, var(--bg));
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .card {
+            width: min(760px, 100%);
+            background: var(--card);
+            border-radius: 14px;
+            padding: 28px;
+            box-shadow: 0 14px 30px rgba(2, 6, 23, 0.08);
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 1.6rem;
+        }
+
+        .intro {
+            margin: 0 0 20px;
+            color: var(--muted);
+        }
+
+        .alert-error {
+            margin-bottom: 16px;
+            padding: 10px 12px;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            background: var(--danger-bg);
+            color: var(--danger);
+            font-size: 0.95rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 0.92rem;
+            font-weight: 600;
+        }
+
+        .required {
+            color: var(--danger);
+        }
+
+        .form-control {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: #0ea5a4;
+            box-shadow: 0 0 0 3px rgba(14, 165, 164, 0.15);
+        }
+
+        .help {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        .error {
+            margin: 0;
+            color: var(--danger);
+            font-size: 0.85rem;
+        }
+
+        .has-error .form-control {
+            border-color: #f87171;
+        }
+
+        .checkbox-field {
+            justify-content: center;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 44px;
+        }
+
+        .checkbox-input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #111827;
+        }
+
+        @media (max-width: 720px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Registro de Asistencia</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Guardar asistencia</button>
-    </form>
+    <main class="card">
+        <h1>Registro de Asistencia</h1>
+        <p class="intro">Completa los datos del estudiante o asistente. Los campos marcados con <span class="required">*</span> son obligatorios.</p>
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert-error">
+                    {% for error in form.non_field_errors %}
+                        <p class="error">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if form.errors and not form.non_field_errors %}
+                <div class="alert-error">Revisa los campos marcados para continuar.</div>
+            {% endif %}
+
+            <section class="grid">
+                <div class="field {% if form.nombre_completo.errors %}has-error{% endif %}">
+                    <label for="{{ form.nombre_completo.id_for_label }}">{{ form.nombre_completo.label }} <span class="required">*</span></label>
+                    {{ form.nombre_completo }}
+                    {% for error in form.nombre_completo.errors %}<p class="error">{{ error }}</p>{% endfor %}
+                </div>
+
+                <div class="field {% if form.documento_identidad.errors %}has-error{% endif %}">
+                    <label for="{{ form.documento_identidad.id_for_label }}">{{ form.documento_identidad.label }} <span class="required">*</span></label>
+                    {{ form.documento_identidad }}
+                    {% if form.documento_identidad.help_text %}<p class="help">{{ form.documento_identidad.help_text }}</p>{% endif %}
+                    {% for error in form.documento_identidad.errors %}<p class="error">{{ error }}</p>{% endfor %}
+                </div>
+
+                <div class="field {% if form.correo_electronico.errors %}has-error{% endif %}">
+                    <label for="{{ form.correo_electronico.id_for_label }}">{{ form.correo_electronico.label }} <span class="required">*</span></label>
+                    {{ form.correo_electronico }}
+                    {% for error in form.correo_electronico.errors %}<p class="error">{{ error }}</p>{% endfor %}
+                </div>
+
+                <div class="field {% if form.fecha_asistencia.errors %}has-error{% endif %}">
+                    <label for="{{ form.fecha_asistencia.id_for_label }}">{{ form.fecha_asistencia.label }} <span class="required">*</span></label>
+                    {{ form.fecha_asistencia }}
+                    {% for error in form.fecha_asistencia.errors %}<p class="error">{{ error }}</p>{% endfor %}
+                </div>
+
+                <div class="field {% if form.hora_ingreso.errors %}has-error{% endif %}">
+                    <label for="{{ form.hora_ingreso.id_for_label }}">{{ form.hora_ingreso.label }} <span class="required">*</span></label>
+                    {{ form.hora_ingreso }}
+                    {% for error in form.hora_ingreso.errors %}<p class="error">{{ error }}</p>{% endfor %}
+                </div>
+
+                <div class="field {% if form.hora_salida.errors %}has-error{% endif %}">
+                    <label for="{{ form.hora_salida.id_for_label }}">{{ form.hora_salida.label }} <span class="required">*</span></label>
+                    {{ form.hora_salida }}
+                    {% for error in form.hora_salida.errors %}<p class="error">{{ error }}</p>{% endfor %}
+                </div>
+
+                <div class="field full checkbox-field {% if form.presente.errors %}has-error{% endif %}">
+                    <div class="checkbox-wrapper">
+                        {{ form.presente }}
+                        <label for="{{ form.presente.id_for_label }}">{{ form.presente.label }}</label>
+                    </div>
+                    {% for error in form.presente.errors %}<p class="error">{{ error }}</p>{% endfor %}
+                </div>
+
+                <div class="field full {% if form.observaciones.errors %}has-error{% endif %}">
+                    <label for="{{ form.observaciones.id_for_label }}">{{ form.observaciones.label }}</label>
+                    {{ form.observaciones }}
+                    {% if form.observaciones.help_text %}<p class="help">{{ form.observaciones.help_text }}</p>{% endif %}
+                    {% for error in form.observaciones.errors %}<p class="error">{{ error }}</p>{% endfor %}
+                </div>
+            </section>
+
+            <div class="actions">
+                <button type="submit" class="btn btn-primary">Guardar asistencia</button>
+                <a class="btn btn-secondary" href="{% url 'home' %}">Volver al inicio</a>
+            </div>
+        </form>
+    </main>
 </body>
 </html>
