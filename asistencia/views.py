@@ -8,8 +8,12 @@ def registrar_asistencia(request):
         form = AsistenciaForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("/asistencia/confirmacion/")
+            return redirect("asistencia:confirmacion_asistencia")
     else:
         form = AsistenciaForm()
 
     return render(request, "asistencia/formulario_asistencia.html", {"form": form})
+
+
+def confirmacion_asistencia(request):
+    return render(request, "asistencia/confirmacion_asistencia.html")
