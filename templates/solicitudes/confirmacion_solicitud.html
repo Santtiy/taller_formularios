@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitud Enviada</title>
+    <style>
+        :root {
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --success: #0f766e;
+            --success-bg: #ecfdf5;
+            --success-border: #99f6e4;
+            --primary: #0f4c81;
+            --primary-hover: #0b3a63;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: linear-gradient(180deg, #ecf3fb 0%, var(--bg) 100%);
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text);
+        }
+
+        .card {
+            width: 100%;
+            max-width: 560px;
+            background: var(--card);
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+            padding: 28px;
+            text-align: center;
+        }
+
+        .success-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            border-radius: 999px;
+            background: var(--success-bg);
+            border: 1px solid var(--success-border);
+            color: var(--success);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 1.6rem;
+        }
+
+        p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .actions {
+            margin-top: 22px;
+        }
+
+        .btn-link {
+            display: inline-block;
+            text-decoration: none;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 8px;
+            padding: 11px 16px;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .btn-link:hover {
+            background: var(--primary-hover);
+        }
+    </style>
+</head>
+<body>
+    <section class="card" aria-labelledby="titulo-confirmacion">
+        <div class="success-badge" aria-hidden="true">OK</div>
+        <h1 id="titulo-confirmacion">Solicitud registrada con exito</h1>
+        <p>Tu solicitud fue enviada correctamente. Pronto sera revisada por el equipo correspondiente.</p>
+        <div class="actions">
+            <a class="btn-link" href="{% url 'solicitudes:registrar_solicitud' %}">Registrar una nueva solicitud</a>
+        </div>
+    </section>
+</body>
+</html>

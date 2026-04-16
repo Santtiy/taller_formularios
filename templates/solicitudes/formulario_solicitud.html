@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Solicitud</title>
+    <style>
+        :root {
+            --bg: #f4f6f9;
+            --card: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --primary: #0f4c81;
+            --primary-hover: #0b3a63;
+            --danger-bg: #fef2f2;
+            --danger-text: #b91c1c;
+            --border: #d1d5db;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(180deg, #eef2f7 0%, var(--bg) 100%);
+            color: var(--text);
+        }
+
+        .page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 760px;
+            background: var(--card);
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+            padding: 28px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 1.7rem;
+        }
+
+        .subtitle {
+            margin: 0 0 22px;
+            color: var(--muted);
+        }
+
+        .required-note {
+            margin: 0 0 16px;
+            font-size: 0.95rem;
+            color: var(--muted);
+        }
+
+        .required-mark {
+            color: #dc2626;
+            font-weight: 700;
+        }
+
+        .non-field-errors {
+            background: var(--danger-bg);
+            border: 1px solid #fecaca;
+            color: var(--danger-text);
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-bottom: 16px;
+        }
+
+        .field-group {
+            margin-bottom: 16px;
+        }
+
+        .field-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.97rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: #fff;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.18);
+            outline: none;
+        }
+
+        select.form-control {
+            cursor: pointer;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 130px;
+        }
+
+        .help-text {
+            display: block;
+            margin-top: 6px;
+            color: var(--muted);
+            font-size: 0.88rem;
+        }
+
+        .field-error {
+            margin-top: 6px;
+            color: var(--danger-text);
+            font-size: 0.88rem;
+        }
+
+        .field-has-error .form-control {
+            border-color: #ef4444;
+            background: #fff7f7;
+        }
+
+        .actions {
+            margin-top: 8px;
+        }
+
+        .btn-primary {
+            border: 0;
+            border-radius: 8px;
+            background: var(--primary);
+            color: #fff;
+            padding: 11px 18px;
+            font-size: 0.97rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        @media (max-width: 640px) {
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <section class="card" aria-labelledby="titulo-formulario">
+            <h1 id="titulo-formulario">Registro de Solicitud</h1>
+            <p class="subtitle">Completa el formulario con tus datos para registrar tu solicitud.</p>
+            <p class="required-note"><span class="required-mark">*</span> Campo obligatorio</p>
+
+            {% if form.non_field_errors %}
+                <div class="non-field-errors">
+                    {% for error in form.non_field_errors %}
+                        <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+
+                {% for field in form %}
+                    <div class="field-group {% if field.errors %}field-has-error{% endif %}">
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                            {% if field.field.required %}
+                                <span class="required-mark">*</span>
+                            {% endif %}
+                        </label>
+                        {{ field }}
+
+                        {% if field.help_text %}
+                            <small class="help-text">{{ field.help_text }}</small>
+                        {% endif %}
+
+                        {% for error in field.errors %}
+                            <div class="field-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <div class="actions">
+                    <button type="submit" class="btn-primary">Enviar solicitud</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

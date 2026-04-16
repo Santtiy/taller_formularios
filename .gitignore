@@ -1,0 +1,12 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Local SQLite database
+db.sqlite3
+
+# Virtual environment
+ambiente/
+
+# Django media files (local)
+media/
